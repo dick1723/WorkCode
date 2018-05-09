@@ -1,0 +1,17 @@
+select * from SYSCLIENTSESSIONS  A
+
+join SYSSERVERSESSIONS B on B.SERVERID=A.SERVERID 
+
+join USERINFO  C on C.ID=A.USERID 
+where 
+A.status!=1 
+--and USERID='mpzhe'
+and datepart(Year,A.LOGINDATETIME)='2018'
+order by A.LOGINDATETIME asc  
+go
+
+delete from SYSCLIENTSESSIONS where SYSCLIENTSESSIONS.status=0 
+and datepart(Year,SYSCLIENTSESSIONS.LOGINDATETIME)='2016' 
+go
+
+select * from SYSCLIENTSESSIONS where SYSCLIENTSESSIONS.status=0 

@@ -1,0 +1,60 @@
+ 
+select 
+prod.DATAAREAID,
+prod.CONFIRMEDDLV,
+prod.PRODID,
+prod.PRODSTATUS,
+prod.WORKSHOP,
+prod.PRODUCTLINE,
+prod.ITEMID,
+AA.CONFIGID,
+config.NAME,
+prod.QTYSCHED,
+prod.BOMID,
+prod.BOMDATE,
+
+pbom.ITEMID as MMItem,
+it.ITEMNAME,
+it.NAMEALIAS,
+it.ITEMGROUPID,
+AA.INVENTCOLORID,
+color.NAME,
+pbom.GROUPID,
+pbom.GROUPNAME,
+pbom.BOMQTYSERIE,
+pbom.BOMQTY,
+pbom.SCRAPVAR,
+pbom.UNITID,
+pbom.QTYBOMCALC,
+pbom.REMAINBOMFINANCIAL,
+pbom.ACTURALPICKQTY,
+pbom.BOMRefRecId,
+pbom.BOMID,
+bom.BOMID,
+bom.FROMDATE,
+bom.TODATE,
+bom.BOMQTY,
+bom.SCRAPVAR,
+bom.UNITID,
+bom.BOMQTYSERIE,
+AA.RefRecIdBOMcalcTransDB,
+calc.PRICECALCID,
+calcDim.INVENTCOLORID,
+calc.TEC_NETQTY,
+calc.KEY2,
+calc.ADJUSTSCRAPVAR,
+calc.TEC_PURCHPRICE,
+calc.TEC_PURCHUNIT,
+dateadd(HH,8,st.CREATEDDATETIME)  as  SOCreateDateTime
+from SUP_Mikez_20180412 AA
+
+left join  PRODTABLE prod  on prod.DATAAREAID=AA.dataareaid and prod.PRODID=AA.prodid
+LEFT join  SALESTABLE ST   on ST.DATAAREAID=Prod.DATAAREAID and st.SALESID=prod.SALESID
+left join CONFIGTABLE config on config.DATAAREAID=AA.DATAAREAID and config.ITEMID=AA.ITEMIDFG and config.CONFIGID=AA.CONFIGID
+left join PRODBOM	 pbom on pbom.DATAAREAID=AA.DATAAREAID and pbom.INVENTTRANSID=AA.INVENTTRANSIDPBOM
+
+left join INVENTTABLE  it on it.DATAAREAID=pbom.DATAAREAID and it.ITEMID=AA.ITEMID --and it.ITEMGROUPID=N'Lthr¥Ö®Æ'
+left join INVENTCOLOR color on color.DATAAREAID=AA.DATAAREAID and color.ITEMID=AA.ITEMID and color.INVENTCOLORID=AA.INVENTCOLORID
+left join BOM   bom on bom.DATAAREAID=pbom.DATAAREAID           and bom.RECID=AA.RefRecIdBOM
+left join BOMCalcTrans Calc on Calc.RECID=AA.RefRecIdBOMcalcTransDB and calc.DATAAREAID='005'
+left join  INVENTDIM  calcDim on calcDim.DATAAREAID=calc.DATAAREAID and calcDim.INVENTDIMID=calc.KEY4INVENTDIMID
